@@ -225,6 +225,7 @@ comme c'est un avl, lorsque l'on rajoute une nouvelle station dans l'arbre
 (avec un nouvel identifiant), on sera peut-etre mener a faire des rotationq,...*/
 
 
-
-
-
+int main(){
+    scanf("%d ; %D ;%d \n", &a, &b, &c );
+    
+}
