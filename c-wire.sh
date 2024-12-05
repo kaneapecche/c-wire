@@ -100,3 +100,29 @@ if[! -f programme.c]; then
 fi
 
 # fonction qui va permettre le filtrage 
+centrale=$1 #fonction a regler dans les if faut voir comment on ecrit la condition a l'interieur
+hvb=$2
+hva=$3
+lv=$4
+  if[ $centrale -eq 5 ] ;
+	cat 'c-wire_v25.dat' | grep -E "^$centrale;"
+  fi
+  if[^$hvb]
+	cat 'c-wire_v25.dat' | grep -E "^$hvb;"
+  fi
+  if[^$hva]
+	cat 'c-wire_v25.dat' | grep -E "^$hva;"
+  fi
+  if[^$lv]
+	cat 'c-wire_v25.dat' | grep -E "^$lv;"
+  fi
+
+
+#demande le type de station
+echo"quelle type de station voulez-vous ? (hvb, hva, lv)"
+read type_station
+
+#cree un fichier pour le resultat
+echo"nom, capacite, total consommateur" > c-wire_v25.txt
+
+
