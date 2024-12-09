@@ -116,13 +116,38 @@ lv=$4
   if[^$lv]
 	cat 'c-wire_v25.dat' | grep -E "^$lv;"
   fi
+  
+//nom du fichier de sortie
+sortie_fichier="c-wire_v25.dat"
+
+echo "liste des stations et informations"> $sortie_fichier"
+
+#fonction pour demander les informations sur chaque station
+ 
+info_station(){
+	
+	#demander le type de station
+	// read -p permet de poser des questions aà l'utilisateur et stocker sa réponse
+	
+	read -p "entrez le type de station (hvb, hva,lv):"type_station
+	#demander la capacité de la station
+	read -p "entrez la capacité de la station (en MW):"capacité
+	#demander la somme des consommateurs branchés
+	read -p "entrez la somme des consommateurs (en MW):"consommateurs
+	
+	#ajouter les informations dans le fichier, la fonction est utilisé pour ajouter une ligne au fichier contenant la valeur de la variable
+	echo "Type de station: $type_station">> "$sortie_fichier"
+	echo "Capacité: $capacité MW">> "$sortie_fichier"
+	echo "Consommateurs:$consommateurs MW">> "$sortie_fichier"
+	
+	}
+	
+#afficher le contenu du fichier généré
+
+echo "les informations sont bien dans le fichier '$sortie_fichier'."
+cat  "$sortie_fichier" # lit le fichuier et affiche son contenu sur le terminal
 
 
-#demande le type de station
-echo"quelle type de station voulez-vous ? (hvb, hva, lv)"
-read type_station
 
-#cree un fichier pour le resultat
-echo"nom, capacite, total consommateur" > c-wire_v25.txt
 
 
