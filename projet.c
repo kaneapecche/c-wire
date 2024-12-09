@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include<math.h>
 #include<stdlib.h>
+#include<string.h>
 
 typedef enum{
-    hvb=1, hva, lv, centrale;
+    hvb=1, hva, lv, centrale
 }Nom_station;
 
 typedef struct{
@@ -21,58 +22,64 @@ typedef struct arbre{
     int conso_total;
 }Arbre;
 
-typedef struct{
+/*typedef struct{
     False, True;
-}Bool;
+}Bool;*/
 
 //Fonctions pour la partie de l'arbre binaire equilibrer 
 
-Arbre* creation(int r){ //creation d'un nouveau noeud dans l'arbre 
+Arbre* creation(Station s){ //creation d'un nouveau noeud dans l'arbre 
     Arbre* noeud=malloc(sizeof(Arbre));
-    if(pnew==NULL){
+    if(noeud==NULL){
         exit(1);
     }
-    noeud->station=r;
+    noeud->station=s;
     noeud->gauche=NULL;
     noeud->droit=NULL;
     noeud->equilibre=0;
     return noeud;
 }
 
-Bool estVide(Arbre* racine){ //verifie si l'arbre a des fils ou est vide 
+int estVide(Arbre* racine){ //verifie si l'arbre a des fils ou est vide 
     if(racine == NULL){
-        return True;
+        return 1;
     }
-    return False;
+    return 0;
 }
 
-Bool existeGauche(Arbre* racine){ //verifie si le fils gauche existe 
+int existeGauche(Arbre* racine){ //verifie si le fils gauche existe 
     if(!estVide(racine)){
         if(racine->gauche != NULL){
-            return True;
+            return 1;
         }
     }
-    return False;
+    return 0;
 }
 
-Bool existeDroit(Arbre* racine){ //verifie si le fils droit exiiste 
+int existeDroit(Arbre* racine){ //verifie si le fils droit exiiste 
     if(!estVide(racine)){
         if(racine->droit!=NULL){
-            return True;
+            return 1;
         }
     }
-    return False;
+    return 0;
 }
 
-Bool estFeuille(Arbre* racine){ //verifie si c'est une feuille 
+int estFeuille(Arbre* racine){ //verifie si c'est une feuille 
     if(!estVide(racine)){
         if(!existeDroit(racine) && !existeGauche(racine)){
-            return True;
+            return 1;
         }
     }
-    return False;
+    return 0;
+}
+int min(int a, int b){
+   return (a<b)? a : b;
 }
 
+int max(int a, int b){
+   return (a>b)? a : b;
+}
 Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage 
     Arbre* pivot;
     int eq_a;
@@ -84,7 +91,7 @@ Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage
     eq_a=a->equilibre;
     eq_p=pivot->equilibre;
     a->equilibre=eq_a-max(eq_p, 0)-1;
-    pivot->equilibre = min( eq_a-2, eq_a+eq_p-2, eq_p-1 )
+    pivot->equilibre = min( eq_a-2, eq_a+eq_p-2, eq_p-1 );
     a=pivot;
     return a;
 
@@ -101,7 +108,7 @@ Arbre* rotationdroite(Arbre* a){ //rotation a droite en cas de desequillibrage
     eq_a=a->equilibre;
     eq_p=pivot->equilibre;
     a->equilibre=eq_a-min(eq_p, 0)+1;
-    pivot->equilibre = max( eq_a+2, eq_a+eq_p+2, eq_p+1 )
+    pivot->equilibre = max( eq_a+2, eq_a+eq_p+2, eq_p+1 );
     a=pivot;
     return a;
 }
@@ -121,6 +128,15 @@ int facteur(Arbre* racine){ //retourne le facteur d'equilibre
         racine->equilibre = hauteur(racine->droit) - hauteur(racine->gauche);
     }
     return racine->equilibre;
+}
+int doublerotationdroite(Arbre* a){
+    a->gauche=rotationgauche(a->gauche);
+    return rotationdroite(a);
+}
+ 
+int doublerotationgauche(Arbre* a){
+    a->droit=rotationdroite(a->droit);
+    return rotationgauche(a);
 }
 
 
@@ -143,28 +159,19 @@ Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
     }
     return a; 
 }
-int doublerotationdroite(Arbre* a){
-    a->gauche=rotationgauche(a->gauche);
-    return rotationdroite(a);
-}
- 
-int doublerotationgauche(Arbre* a){
-    a->droit=rotationdroite(a->droit);
-    return rotationgauche(a);
-    }
 
 
-Arbre*insertionAVL (Arbre*a, Station station ,int *h){
+Arbre*insertionAVL (Arbre* a, Station station ,int *h){
     if (a==NULL){
     *h=1;
     retun creation(station);
     }
-    else if(station <a->station){
-    a->gauche=insertionAVL(a->gauche, station, &h);
+    else if(station.capacite < a->station.capacite){
+    a->gauche=insertionAVL(a->gauche, station, h);
     *h=-*h;
     }
-    else if(station>a->station){
-    a->droit=insertionAVL(a->droit, station,&h);
+    else if(station.capacite > a->station.capacite){
+    a->droit=insertionAVL(a->droit, station,h);
     }
     else{
     *h=0;
@@ -197,19 +204,95 @@ Arbre* recherche( Arbre* a, Station s){ //recherche un noeud specifique dans l'a
     }
 }
 
-/*------
 
---------
-
---------*/
-
-//fonctions pour le traitements des donnees 
-//somme des consommations pour une station 
-int somme_conso(){
-
+void verificationalloc() { // alloue la place et verifie si l'allocation ait reussi A ou sinn message d'erreur
+	Arbre* pnew=malloc(sizeof(Arbre));
+	if(pnew==NULL) {
+		printf("erreur d'allocation\n");
+		exit(10);
+	}
+	free(pnew);
 }
 
-//lecture et traitement des donnees 
+void verificationferme(FILE* fichier) { //-ferme un fichier et verifie que l'operation a reussi C
+
+	// Ferme le fichier et verifie si l'operation reussie
+	if (fclose(fichier) != 0) {
+		printf("Erreur de fermeture du fichier\n");
+		exit(20);  // Arrete du programme avec un code d'erreur
+	}
+
+	// Si le fichier est ferme correctement
+	printf("Fichier fermé\n");
+}
+
+
+
+
+ //verifie que les arguments sont valides A/ verifie que le type de station est valide /verifie lacces au fichier avant de louvrir C
+void erreurs(int argc, char *argv[]) {
+    // Vérifie si les arguments sont valides sinon arrete le programme
+    if (argc < 4) {  
+        printf("Erreur, il y a trop peu d'arguments\n");
+        exit(30); 
+
+    // Vérifie que le type de station est valide
+    char types_station = {"hvb", "hva", "lv"};
+    int station = 0;
+    for (int i = 0; i < 3; i++) {
+        if (strcmp(argv[2], types_station[i]) == 0) {
+            station = 1;
+        }
+    }
+
+    if (!station) {
+        printf("Erreur : type de station invalide\n");
+        exit(40);  // Arrêt du programme avec un code d'erreur
+    }
+
+    // Vérifie l'accès au fichier avant de l'ouvrir
+    FILE *fichier = fopen(argv[1], "r"); //verifie l'ouverture du fichier en lecture 
+    if (fichier == NULL) {
+        printf("Erreur, impossible d'ouvrir le fichier %s\n", argv[1]);
+        exit(50);  // Arrêt du programme avec un code d'erreur
+    }
+    
+
+
+    // Vérifie que le type de consommateur est valide
+    if (strcmp(argv[3], "comp") != 0 && strcmp(argv[3], "indiv") != 0 && strcmp(argv[3], "all") != 0) {
+        printf("Erreur : type de consommateur incorrect\n");
+        exit(60);  // Arrêt du programme avec un code d'erreur
+    }
+
+    // Ferme le fichier après la vérification
+    verificationferme(fichier);
+}
+void verification(Arbre * a){
+    if(a==NULL){
+        printf("Erreur");
+        exit(30);
+    }
+}
+int parcoursprefixe(Arbre* a){
+    if(a!=NULL){
+    printf("%d", a->station.id);
+    parcoursprefixe(a->gauche);
+    parcoursprefixe(a->droit);
+    }
+}
+
+int somme(Arbre* a, int e){
+    int s=0;
+    if(a != NULL){
+     if(a->station.id==e){ 
+         s += a->station.somme;
+    }
+    s += somme(a->gauche, e);
+    s += somme(a->droit, e);
+    
+    return s;
+}
 
 
 
@@ -226,6 +309,15 @@ comme c'est un avl, lorsque l'on rajoute une nouvelle station dans l'arbre
 
 
 int main(){
-    scanf("%d ; %D ;%d \n", &a, &b, &c );
-    
+
+  int a, b, c;
+    printf("Entrez trois entiers (séparés par des espaces) : ");
+    scanf("%d %d %d", &a, &b, &c);
+
+    Station s = {hvb, b, c};
+    Arbre* arbre = creation(s);
+
+    printf("Station créée : %d, Capacité : %d, Consommation : %d\n", s.id, s.capacite, s.somme_consommateur);
+
+    return 0;
 }
