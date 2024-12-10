@@ -120,14 +120,14 @@ lv=$4
 //nom du fichier de sortie
 sortie_fichier="c-wire_v25.dat"
 
-echo "liste des stations et informations"> $sortie_fichier"
+echo "liste des stations et informations"> $sortie_fichier
 
 #fonction pour demander les informations sur chaque station
  
 info_station(){
 	
 	#demander le type de station
-	// read -p permet de poser des questions aà l'utilisateur et stocker sa réponse
+	# read -p permet de poser des questions aà l'utilisateur et stocker sa réponse
 	
 	read -p "entrez le type de station (hvb, hva,lv):"type_station
 	#demander la capacité de la station
@@ -139,8 +139,8 @@ info_station(){
 	echo "Type de station: $type_station">> "$sortie_fichier"
 	echo "Capacité: $capacité MW">> "$sortie_fichier"
 	echo "Consommateurs:$consommateurs MW">> "$sortie_fichier"
-	
-	}
+ }
+
 	
 #afficher le contenu du fichier généré
 
