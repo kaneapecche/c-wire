@@ -34,3 +34,4 @@ echo "La somme des consommateurs pour la catégorie '$categorie' est : $total"
 
 
 
+
