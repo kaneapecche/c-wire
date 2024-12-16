@@ -107,8 +107,6 @@ case $2 in
     ;;
     'lv')
         case $3 in
-            cut -f 4,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
-    ;;
         'comp')
             cut -f 5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,2,3 -d ';'  > tmp.txt
     ;;
@@ -117,5 +115,8 @@ case $2 in
     ;;
         'all')
             cut -f 1- -d ';' $1 | tr '-' '0' | grep -v '^0;' > tmp.txt
-    ;;
+    ;;     *)
+             echo "Erreur : type de consommateur invalide pour 'lv'"
+                exit 1
+                ;;
 esac
