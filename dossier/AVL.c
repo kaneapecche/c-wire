@@ -49,6 +49,15 @@ int estFeuille(Arbre* racine){ //verifie si c'est une feuille
     return 0;
 }
 
+int min(int a, int b){
+   return (a<b)? a : b;
+}
+
+int max(int a, int b){
+   return (a>b)? a : b;
+}
+
+
 Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage 
     Arbre* pivot;
     int eq_a;
@@ -60,7 +69,7 @@ Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage
     eq_a=a->equilibre;
     eq_p=pivot->equilibre;
     a->equilibre=eq_a-max(eq_p, 0)-1;
-    pivot->equilibre = min( eq_a-2, eq_a+eq_p-2, eq_p-1 );
+    pivot->equilibre = min( min(eq_a-2, eq_a+eq_p-2), eq_p-1 );
     a=pivot;
     return a;
 
@@ -77,7 +86,7 @@ Arbre* rotationdroite(Arbre* a){ //rotation a droite en cas de desequillibrage
     eq_a=a->equilibre;
     eq_p=pivot->equilibre;
     a->equilibre=eq_a-min(eq_p, 0)+1;
-    pivot->equilibre = max( eq_a+2, eq_a+eq_p+2, eq_p+1 );
+    pivot->equilibre = max( max(eq_a+2, eq_a+eq_p+2), eq_p+1 );
     a=pivot;
     return a;
 }
@@ -98,12 +107,12 @@ int facteur(Arbre* racine){ //retourne le facteur d'equilibre
     }
     return racine->equilibre;
 }
-int doublerotationdroite(Arbre* a){
+Arbre* doublerotationdroite(Arbre* a){
     a->gauche=rotationgauche(a->gauche);
     return rotationdroite(a);
 }
  
-int doublerotationgauche(Arbre* a){
+Arbre* doublerotationgauche(Arbre* a){
     a->droit=rotationdroite(a->droit);
     return rotationgauche(a);
 }
@@ -133,8 +142,8 @@ Arbre*insertionAVL (Arbre* a, int id_station ,int *h, int capa, int conso){
     if (a==NULL){
         *h=1;
         a  =  creation(id_station);
-        racine->capacite_total+=capa;
-        racine->conso_total+=conso;
+        a->capacite_total+=capa;
+        a->conso_total+=conso;
         return a;
     }
     else if(id_station< a->id_station){
@@ -149,7 +158,7 @@ Arbre*insertionAVL (Arbre* a, int id_station ,int *h, int capa, int conso){
         return a;
     }
     if(*h!=0){
-        a->equilbre=a->equilibre + *h;
+        a->equilibre=a->equilibre + *h;
         if(a->equilibre==0){
             *h=0;
         }
@@ -173,4 +182,5 @@ Arbre* recherche( Arbre* a, int s){ //recherche un noeud specifique dans l'arbre
     else{
         return recherche(a->droit, s);
     }
+}
 }
