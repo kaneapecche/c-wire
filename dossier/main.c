@@ -1,3 +1,12 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include "AVL.h"
+#include "verification.h"
+
+
+
+
 int main(){
     Arbre* racine;
     File* f = fopen("sortie.txt", "w");
