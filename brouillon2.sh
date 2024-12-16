@@ -106,6 +106,7 @@ case $2 in
         cut -f 3,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
     ;;
     'lv')
+        case $3 in
 
     ;;
 esac
