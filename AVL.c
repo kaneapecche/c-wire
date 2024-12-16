@@ -1,6 +1,7 @@
+#include "AVL.h"
 #include<stdio.h>
 #include<stdlib.h>
-#include<AVL.h>
+
     
 Arbre* creation(int s){ //creation d'un nouveau noeud dans l'arbre 
     Arbre* noeud=malloc(sizeof(Arbre));
