@@ -1,6 +1,6 @@
+#include "verification.h"
 #include<stdio.h>
 #include<stdlib.h>
-#include<verification.h>
 #include<string.h>
 
 void verificationalloc() { // alloue la place et verifie si l'allocation ait reussi A ou sinn message d'erreur
