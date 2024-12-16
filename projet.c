@@ -309,18 +309,18 @@ simplement la capacité et la conso qu'on ajoute au noeaud deja existant.
 comme c'est un avl, lorsque l'on rajoute une nouvelle station dans l'arbre
 (avec un nouvel identifiant), on sera peut-etre mener a faire des rotationq,...*/
 
-
 int main(){
     Arbre* racine;
+    File* f = fopen("sortie.txt", "w");
+    if(f==NULL){
+        perror("Erreur lors de l'ouverture du fichier");
+        return 1;
+    }
     int id, capa, conso
     while(scanf("%d %d %d\n", &id, &capa, &conso)==3){
         racine=insertionAVL(racine, id, *h, capa, conso);//la somme est calculée dans la fonction insertionAVL
-        //voir s'il est possible de fzaire la somme directment dans la fonction insertion
+        fprintf(f, "%d %d %d\n", id, capa, conso);//voir s'il est possible de fzaire la somme directment dans la fonction insertion
     }
-    
-    Arbre* arbre = creation(s);
-
-    printf("Station créée : %d, Capacité : %d, Consommation : %d\n", s.id, s.capacite, s.somme_consommateur);
-
+    fclose(f);
     return 0;
 }
