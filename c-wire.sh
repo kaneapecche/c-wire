@@ -64,6 +64,7 @@ verification_arg(){
     fi
 }
 
+
 #fonction qui affiche une aide détaillée sur l'utilisation du script
 aide(){
     echo -e "Utilisation : $0  <arg 1>  <arg2 >  <arg 3>  <arg4>  <arg5>\n"
@@ -76,18 +77,31 @@ aide(){
     echo "Attention! Dans le cas des stations hvb et hva, la seule option de consommateur est comp"
 }
 
+
+
 verification_arg $1 $2 $3 $4 $5
 res1=$?
-if (( res1 != 0)); then
+if (( res1 != 0 )); then
     echo "$res1"
     aide
 else
     echo 'OK'
 fi
+
+#verifie l'existance du fichier c sinon elle le compile
+if [ ! -f test2 ]; then 
+    echo "l'executable programme.c est introuvable. compilation ..."
+    gcc -o test2 test2.c
+    if [ $? -ne 0 ]; then 
+        echo 'erreur : echec de la compilation'
+        exit 1
+    fi
+fi
+
 start_time=$(date +%s)
-    ./projet.c "$#"
+    ./test2 "$#"
     end_time=$(date +%s)
-    duration=$((end_time - start_time))
+    duration=$(( end_time - start_time ))
     echo "temps d'exucation : ${duration}.0 sec"
 
 cat $1
@@ -107,12 +121,13 @@ case $2 in
     ;;
 esac
 
-#verifie l'existance du fichier c sinon elle le compile
-if [ ! -f projet.c ]; then 
-    echo "l'executable programme.c est introuvable. compilation ..."
-    gcc -o projet projet.c
+
+
+./test2
+if [ -f sortie.txt ]; then 
+    cp sortie.txt "$2-$3-$4.csv"
 fi
 
-./projet.c
-if [ -f sortie.txt ]; then 
-    cp sortie.txt "$2-$3-$3.csv"
+#recuperation de la somme du fichier c
+#creation du fichier avec les valeurs 
+#par ordre croissant
