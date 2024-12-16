@@ -91,8 +91,21 @@ start_time=$(date +%s)
     echo "temps d'exucation : ${duration}.0 sec"
 
 #verifie l'existance du fichier c sinon elle le compile
-if[! -f projet.c]; then 
-    echo "l'executable programme.c est introuvable. compilation ..."
+if [ ! -f projet.c ]; then 
+   echo "l'executable programme.c est introuvable. compilation ..."
     make || {echo "erreur: echech de la compilation."; exit 1;}
 fi
 
+cat $1
+case $2 in
+    'hvb')
+        cut -f 2,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
+
+    ;;
+    'hva')
+        cut -f 3,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
+    ;;
+    'lv')
+
+    ;;
+esac
