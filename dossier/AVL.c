@@ -48,13 +48,6 @@ int estFeuille(Arbre* racine){ //verifie si c'est une feuille
     }
     return 0;
 }
-int min(int a, int b){
-   return (a<b)? a : b;
-}
-
-int max(int a, int b){
-   return (a>b)? a : b;
-}
 
 Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage 
     Arbre* pivot;
