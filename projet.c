@@ -3,18 +3,16 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef enum{
-    hvb=1, hva, lv, centrale
-}Nom_station;
-
+/*
 typedef struct{
-    Nom_station id;
+    int id;
     int capacite;
-    int somme_consommateur;
+    int consommateur;
 }Station;
+*/
 
 typedef struct arbre{
-    Station station;
+    int id_station;
     struct arbre* gauche;
     struct arbre* droit;
     int equilibre;
@@ -28,12 +26,12 @@ typedef struct arbre{
 
 //Fonctions pour la partie de l'arbre binaire equilibrer 
 
-Arbre* creation(Station s){ //creation d'un nouveau noeud dans l'arbre 
+Arbre* creation(int s){ //creation d'un nouveau noeud dans l'arbre 
     Arbre* noeud=malloc(sizeof(Arbre));
     if(noeud==NULL){
         exit(1);
     }
-    noeud->station=s;
+    noeud->id_station=s;
     noeud->gauche=NULL;
     noeud->droit=NULL;
     noeud->equilibre=0;
@@ -80,6 +78,7 @@ int min(int a, int b){
 int max(int a, int b){
    return (a>b)? a : b;
 }
+
 Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage 
     Arbre* pivot;
     int eq_a;
@@ -160,43 +159,45 @@ Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
     return a; 
 }
 
-
-Arbre*insertionAVL (Arbre* a, Station station ,int *h){
+Arbre*insertionAVL (Arbre* a, int id_station ,int *h, int capa, int conso){
     if (a==NULL){
-    *h=1;
-    retun creation(station);
+        *h=1;
+        a  =  creation(id_station);
+        racine->capacite_total+=capa;
+        racine->conso_total+=conso;
+        return a;
     }
-    else if(station.capacite < a->station.capacite){
-    a->gauche=insertionAVL(a->gauche, station, h);
-    *h=-*h;
+    else if(id_station< a->id_station){
+        a->gauche=insertionAVL(a->gauche, id_station, h, capa, capa);
+        *h=-*h;
     }
-    else if(station.capacite > a->station.capacite){
-    a->droit=insertionAVL(a->droit, station,h);
+    else if(id_station > a->id_station){
+        a->droit=insertionAVL(a->droit, id_station,h, capa, conso);
     }
     else{
-    *h=0;
-    return a;
+        *h=0;
+        return a;
     }
     if(*h!=0){
-    a->equilbre=a->equilibre + *h;
+        a->equilbre=a->equilibre + *h;
         if(a->equilibre==0){
-        *h=0;
+            *h=0;
         }
         else{
-        *h=1;
+            *h=1;
         }
     }
     return a;
 }
 
-Arbre* recherche( Arbre* a, Station s){ //recherche un noeud specifique dans l'arbre 
+Arbre* recherche( Arbre* a, int s){ //recherche un noeud specifique dans l'arbre 
     if(a==NULL){
         exit(2);
     }
-    else if (a->station==s){
+    else if (a->id_station==s){
         return a;
     }
-    else if (s<a->station){
+    else if (s<a->id_station){
         return recherche(a->gauche, s);
     }
     else{
@@ -226,16 +227,13 @@ void verificationferme(FILE* fichier) { //-ferme un fichier et verifie que l'ope
 	printf("Fichier fermé\n");
 }
 
-
-
-
  //verifie que les arguments sont valides A/ verifie que le type de station est valide /verifie lacces au fichier avant de louvrir C
 void erreurs(int argc, char *argv[]) {
     // Vérifie si les arguments sont valides sinon arrete le programme
     if (argc < 4) {  
         printf("Erreur, il y a trop peu d'arguments\n");
         exit(30); 
-
+    }
     // Vérifie que le type de station est valide
     char types_station = {"hvb", "hva", "lv"};
     int station = 0;
@@ -268,20 +266,24 @@ void erreurs(int argc, char *argv[]) {
     // Ferme le fichier après la vérification
     verificationferme(fichier);
 }
+
+
 void verification(Arbre * a){
     if(a==NULL){
         printf("Erreur");
         exit(30);
     }
 }
-int parcoursprefixe(Arbre* a){
+
+void parcoursprefixe(Arbre* a){
     if(a!=NULL){
-    printf("%d", a->station.id);
+    printf("%d", a->id_station);
     parcoursprefixe(a->gauche);
     parcoursprefixe(a->droit);
     }
 }
 
+/*
 int somme(Arbre* a, int e){
     int s=0;
     if(a != NULL){
@@ -293,7 +295,7 @@ int somme(Arbre* a, int e){
     
     return s;
 }
-
+*/
 
 
 //verifie l'integralite d'une ligne de donnees avant de la traiter 
@@ -309,16 +311,16 @@ comme c'est un avl, lorsque l'on rajoute une nouvelle station dans l'arbre
 
 
 int main(){
-
-  int a, b, c;
-    printf("Entrez trois entiers (séparés par des espaces) : ");
-    scanf("%d %d %d", &a, &b, &c);
-
-    Station s = {hvb, b, c};
+    Arbre* racine;
+    int id, capa, conso
+    while(scanf("%d %d %d\n", &id, &capa, &conso)==3){
+        racine=insertionAVL(racine, id, *h, capa, conso);//la somme est calculée dans la fonction insertionAVL
+        //voir s'il est possible de fzaire la somme directment dans la fonction insertion
+    }
+    
     Arbre* arbre = creation(s);
 
     printf("Station créée : %d, Capacité : %d, Consommation : %d\n", s.id, s.capacite, s.somme_consommateur);
 
     return 0;
 }
-
