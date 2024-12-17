@@ -104,11 +104,11 @@ start_time=$(date +%s)
     echo "temps d'exucation : ${duration}.0 sec"
 
 #cat $1
-outputFile='./sortie.csv'
+outputFile='./sortie.txt'
 > "$outputFile"
 case $2 in
     'hvb')
-        grep -E "^[0-9];[0-9];-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | ./test2 | sort -t ":" -k 2,2n > "$outputFile"
+        grep -E "^[0-9];[0-9];-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' |./test2 > "$outputFile"
         cat "$outputFile"
         echo "$?"
     ;;
@@ -129,7 +129,3 @@ esac
 if [ -f sortie.txt ]; then 
     cp sortie.txt "$2-$3-$4.csv"
 fi
-
-#recuperation de la somme du fichier c
-#creation du fichier avec les valeurs 
-#par ordre croissant 
