@@ -10,8 +10,8 @@ typedef struct arbre{
     struct arbre* gauche;
     struct arbre* droit;
     int equilibre;
-    int capacite_total;
-    int conso_total;
+    long int capacite_total;
+    long int conso_total;
 }Arbre;
 
 //Fonctions pour la partie de l'arbre binaire equilibrer 
@@ -153,10 +153,15 @@ Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
     return a; 
 }
 
-Arbre* insertionAVL (Arbre* a, int id_station ,int *h, int capa, int conso){
+Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int conso){
     if (a==NULL){
         *h=1;
         a  =  creation(id_station);
+        a->capacite_total+=capa;
+        a->conso_total+=conso;
+        return a;
+    }
+    if(id_station == a->id_station){
         a->capacite_total+=capa;
         a->conso_total+=conso;
         return a;
@@ -213,7 +218,7 @@ void verificationalloc() { // alloue la place et verifie si l'allocation ait reu
 
 void parcoursprefixe(Arbre* a){
     if(a!=NULL){
-    printf("%d:%d:%d\n", a->id_station, a->capacite_total, a->conso_total);
+    printf("%d:%ld:%ld\n", a->id_station, a->capacite_total, a->conso_total);
     parcoursprefixe(a->gauche);
     parcoursprefixe(a->droit);
     }
@@ -223,9 +228,10 @@ void parcoursprefixe(Arbre* a){
 
 int main(){
     Arbre* racine = NULL;
-    int id, capa, conso;
+    int id;
+    long int capa, conso;
     int h=-1;
-    while(scanf("%d;%d;%d", &id, &capa, &conso)==3){
+    while(scanf("%d;%ld;%ld", &id, &capa, &conso)==3){
         racine=insertionAVL(racine, id, &h, capa, conso);
         //la somme est calculée dans la fonction insertionAVL
         //voir s'il est possible de fzaire la somme directment dans la fonction insertion
