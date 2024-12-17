@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 typedef struct arbre{
     int id_station;
     struct arbre* gauche;
@@ -72,7 +70,6 @@ int max(int a, int b){
    return (a>b)? a : b;
 }
 
-
 Arbre* rotationgauche(Arbre* a){ //rotation a gauche en cas de desequillibrage 
     Arbre* pivot;
     int eq_a;
@@ -122,16 +119,16 @@ int facteur(Arbre* racine){ //retourne le facteur d'equilibre
     }
     return racine->equilibre;
 }
+
 Arbre* doublerotationdroite(Arbre* a){
     a->gauche=rotationgauche(a->gauche);
     return rotationdroite(a);
 }
- 
+
 Arbre* doublerotationgauche(Arbre* a){
     a->droit=rotationdroite(a->droit);
     return rotationgauche(a);
 }
-
 
 Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
     if(a->equilibre <= 2){
@@ -161,7 +158,7 @@ Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int c
         a->conso_total+=conso;
         return a;
     }
-    if(id_station == a->id_station){
+    else if(id_station == a->id_station){
         a->capacite_total+=capa;
         a->conso_total+=conso;
         return a;
@@ -204,7 +201,6 @@ Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int c
     }
 }*/
 
-
 void verificationalloc() { // alloue la place et verifie si l'allocation ait reussi A ou sinn message d'erreur
     Arbre* pnew=malloc(sizeof(Arbre));
     if(pnew==NULL) {
@@ -214,28 +210,34 @@ void verificationalloc() { // alloue la place et verifie si l'allocation ait reu
     free(pnew);
 }
 
-
-
-void parcoursprefixe(Arbre* a){
+void parcoursprefixe(Arbre* a, FILE* sortie){
     if(a!=NULL){
-    printf("%d:%ld:%ld\n", a->id_station, a->capacite_total, a->conso_total);
-    parcoursprefixe(a->gauche);
-    parcoursprefixe(a->droit);
+    fprintf(sortie, "%d:%ld:%ld\n", a->id_station, a->capacite_total, a->conso_total);
+    parcoursprefixe(a->gauche, sortie);
+    parcoursprefixe(a->droit, sortie);
     }
 }
 
-
-
 int main(){
     Arbre* racine = NULL;
+    FILE* entree=fopen("entree.txt","r");
+    FILE* sortie=fopen("sortie.txt","w");
+    if(entree == NULL || sortie == NULL){
+        exit(1);    
+    }
     int id;
     long int capa, conso;
     int h=-1;
-    while(scanf("%d;%ld;%ld", &id, &capa, &conso)==3){
+    while(fscanf(entree, "%d:%ld:%ld", &id, &capa, &conso)==3){
         racine=insertionAVL(racine, id, &h, capa, conso);
         //la somme est calculée dans la fonction insertionAVL
         //voir s'il est possible de fzaire la somme directment dans la fonction insertion
     }
-    parcoursprefixe(racine);
+    if(racine==NULL){
+        printf("larbre est vide\n");
+    }
+    parcoursprefixe(racine,sortie);
+    fclose(entree);
+    fclose(sortie);
     return 0;
 }
