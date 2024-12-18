@@ -82,29 +82,21 @@ else
     echo 'OK'
 fi
 #verifie l'existance du fichier c sinon elle le compile
-if [ ! -f test1 ]; then 
+if [ ! -f draft1 ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
-    gcc -o test1 test.c
+    gcc -o draft1 draft1.c
     if [ $? -ne 0 ]; then 
         echo 'erreur : echec de la compilation'
         exit 1
     fi
 fi
-
-
 start_time=$(date +%s)
-end_time=$(date +%s)
-duration=$(( end_time - start_time ))
-echo "temps d'exucation : ${duration}.0 sec"
-
-
-
-
 outputFile='./sortie.txt'
 > "$outputFile"
 
 inputFile='./entree.txt'
 > "$inputFile"
+
 if [ -n "$4" ]; then  # Si un identifiant de centrale est fourni
  case $2 in
         'hvb')
@@ -117,13 +109,13 @@ if [ -n "$4" ]; then  # Si un identifiant de centrale est fourni
         'lv')
             case $3 in
         	'comp')
-        		grep -E "^.;.;.;[0-9]+;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'indiv')
-        		grep -E "^.;.;.;[0-9]+;-;[0-9]+;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'all')
-        		grep -E "^.;.;.;[0-9]+;.;.;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	*)
         		echo 'erreur'
@@ -147,14 +139,13 @@ case $2 in
     'lv')
         case $3 in
         	'comp')
-        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheeee
+        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'indiv')
-        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheeeee
+        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'all')
-        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheee
-        		
+        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	*)
         		echo 'erreur'
@@ -167,15 +158,10 @@ case $2 in
 esac
 fi
 
-./test1 < "$inputFile" 
+./draft1 < "$inputFile"
 
-sort -t ':' -k 2,2n "$outputFile" > "$2_$3_$4.txt"
-
-
-
-
-
-end_time=$(date +%s)
-duration=$(( end_time - start_time ))
-echo "temps d'exucation : ${duration}.0 sec"
-#cat $1
+if [ -n "$4" ]; then
+	sort -t ':' -k 2,2n "$outputFile" > "$2_$3_$4.txt"
+else
+	sort -t ':' -k 2,2n "$outputFile" > "$2_$3.txt"
+fi
