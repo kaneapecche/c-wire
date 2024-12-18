@@ -82,15 +82,24 @@ else
     echo 'OK'
 fi
 #verifie l'existance du fichier c sinon elle le compile
-if [ ! -f draft1 ]; then 
+if [ ! -f test1 ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
-    gcc -o draft1 draft1.c
+    gcc -o test1 test.c
     if [ $? -ne 0 ]; then 
         echo 'erreur : echec de la compilation'
         exit 1
     fi
 fi
+
+
 start_time=$(date +%s)
+end_time=$(date +%s)
+duration=$(( end_time - start_time ))
+echo "temps d'exucation : ${duration}.0 sec"
+
+
+
+
 outputFile='./sortie.txt'
 > "$outputFile"
 
@@ -99,22 +108,22 @@ inputFile='./entree.txt'
 if [ -n "$4" ]; then  # Si un identifiant de centrale est fourni
  case $2 in
         'hvb')
-            grep -E "^[0-9];[0-9];-;-;" "$1" | grep -E "$4;" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
+            grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | grep -E "$4;" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
             echo "$?"
         ;;
         'hva')
-            grep -E "^[0-9];.;[0-9];-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
+            grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
         ;;
         'lv')
             case $3 in
         	'comp')
-        		grep -E "^.;.;.;[0-9];[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'indiv')
-        		grep -E "^.;.;.;[0-9];-;[0-9]+;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;-;[0-9]+;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	'all')
-        		grep -E "^.;.;.;[0-9];.;.;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;.;.;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         	;;
         	*)
         		echo 'erreur'
@@ -128,23 +137,24 @@ if [ -n "$4" ]; then  # Si un identifiant de centrale est fourni
 else
 case $2 in
     'hvb')
-        grep -E "^[0-9];[0-9];-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         
         echo "$?"
     ;;
     'hva')
-        grep -E "^[0-9];.;[0-9];-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
     ;;
     'lv')
         case $3 in
         	'comp')
-        		grep -E "^.;.;.;[0-9];[0-9]+;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheeee
         	;;
         	'indiv')
-        		grep -E "^.;.;.;[0-9];-;[0-9]+;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheeeee
         	;;
         	'all')
-        		grep -E "^.;.;.;[0-9];.;.;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile" #sa marcheee
+        		
         	;;
         	*)
         		echo 'erreur'
@@ -157,7 +167,7 @@ case $2 in
 esac
 fi
 
-./draft1 < "$inputFile" 
+./test1 < "$inputFile" 
 
 sort -t ':' -k 2,2n "$outputFile" > "$2_$3_$4.txt"
 
