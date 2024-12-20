@@ -1,10 +1,25 @@
 #!/bin/bash
 
+#initialisations des fichiers
+minmaxFile='./lv_all_minmax.txt'
+> "$minmaxFile"
+outputFile='./sortie.txt'
+> "$outputFile"
+
+inputFile='./entree.txt'
+> "$inputFile"
+
+tempFile='./tmp.txt'
+> "$tempFile"
+
+#fonction qui vérifie s'il y a le bon nombre d'arguments et s'ils sont cohérents
 verification_arg(){
+    #signale un probleme si les argumets 1, 2 et 3 sont manquants
     if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
         echo "arguments manquants"
         return 1
     else 
+    	#signale un probleme si le fichier n'existe pas
         if [ ! -f "$1" ]; then 
             echo "Le fichier n'existe pas"
             return 2
@@ -14,6 +29,7 @@ verification_arg(){
         a='indiv'
         b='all'
         c="comp"
+        #verifie que les arguemnts sont cohérents
         case $2 in
             'hvb'|'hva') 
                 echo "Argument 2 valide"
@@ -23,25 +39,27 @@ verification_arg(){
                     echo "Erreur : argument 3 invalide"
                     return 3
                 fi
-                ;;
+           ;;
             'lv')
                 echo "Argument 2 valide"
-                if [ "$3" == "$a" ] || [ "$23" == "$b" ] || [ "$3" == "$c" ]; then
+                if [ "$3" == "$a" ] || [ "$3" == "$b" ] || [ "$3" == "$c" ]; then
                     echo "Argument 3 valide"
                 else
                     echo "Erreur : argument 3 invalide"
                     return 4
                 fi
-                ;;
+           ;;
             *)
                 echo "Erreur : Argument 2 invalide"
                 return 5
-                ;;
+          ;;
         esac 
     fi
+    #verifie s'il y a un 5eme argument pour afficher l'aide
     if [ -z $5 ]; then
        echo "pas d'aide"
     else
+    	#affiche l'adie lorsque demandé
         d="-h"
         if [ "$5" != "$d" ]; then
             echo "argument 5 invalide"
@@ -50,6 +68,7 @@ verification_arg(){
             aide
         fi  
     fi
+    #verifie s'il y a un 4eme argument pour l''identifiant de la centrale
     if [ -z $4 ]; then
         echo "pas d'id de centrale"
     else
@@ -64,7 +83,6 @@ verification_arg(){
     fi
 }
 
-
 #fonction qui affiche une aide détaillée sur l'utilisation du script
 aide(){
     echo -e "Utilisation : $0  <arg 1>  <arg2 >  <arg 3>  <arg4>  <arg5>\n"
@@ -77,57 +95,208 @@ aide(){
     echo "Attention! Dans le cas des stations hvb et hva, la seule option de consommateur est comp"
 }
 
-
-
 verification_arg $1 $2 $3 $4 $5
 res1=$?
+#s'il y a un probleme, on affiche l'aide
 if (( res1 != 0 )); then
     echo "$res1"
     aide
 else
     echo 'OK'
 fi
-
 #verifie l'existance du fichier c sinon elle le compile
-if [ ! -f test2 ]; then 
+if [ ! -f draft1 ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
-    gcc -o test2 test2.c
+    gcc -o draft1 draft1.c
     if [ $? -ne 0 ]; then 
         echo 'erreur : echec de la compilation'
         exit 1
     fi
 fi
 
+#on débute le chronometre pour avoir le temps d'exécution
 start_time=$(date +%s)
-    ./test2 "$#"
-    end_time=$(date +%s)
-    duration=$(( end_time - start_time ))
-    echo "temps d'exucation : ${duration}.0 sec"
 
-cat $1
-case $2 in
-    'hvb')
-        cut -f 2,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
-
-    ;;
-    'hva')
-        cut -f 3,5,7,8 -d ';' $1 | tr '-' '0' | grep -v '^0;' | cut -f 1,3,4 -d ';' > tmp.txt
-    ;;
-    'lv')
-        echo 'test'
-    ;;
-    *)
-        echo 'test'
-    ;;
-esac
-
-
-
-./test2
-if [ -f sortie.txt ]; then 
-    cp sortie.txt "$2-$3-$4.csv"
+# Si un identifiant de centrale est fourni, on fait le filtrage pour la centrale demandée ainsi que pour les autres parametres
+if [ -n "$4" ]; then 
+ case $2 in
+ 
+#dans le cas des stations hvb et hva, le consommateur ne peut être que une entrerpise
+        'hvb')
+            grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | grep -E "$4;" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
+            ./draft1 < "$inputFile"
+        ;;
+        'hva')
+            grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
+            ./draft1 < "$inputFile"
+        ;;
+        'lv')
+        case $3 in
+        	'comp')
+        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		./draft1 < "$inputFile"
+        	;;
+        	'indiv')
+        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		./draft1 < "$inputFile"
+        	;;
+        	'all')
+        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		./draft1 < "$inputFile"
+        	;;
+        	*)
+        		echo 'erreur'
+        	;;
+        esac
+        ;;
+        *)
+            echo "Option non reconnue pour la centrale $4."
+        ;;
+    esac
+else
+#si aucun identifiant de centrale n'est spécifié, on effectue le filtrage sur les autres arguments
+	case $2 in
+    		'hvb')
+        		grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		./draft1 < "$inputFile"
+    		;;
+    		'hva')
+        		grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		./draft1 < "$inputFile"
+    		;;
+    		'lv')
+        		case $3 in
+        			'comp')
+        				grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				end_time=$(date +%s)
+    					duration=$(( end_time - start_time ))
+    					echo "temps d'exucation : ${duration}.0 sec"
+        				start_time2=$(date +%s)
+        				./draft1 < "$inputFile"
+        				end_time2=$(date +%s)
+    					duration2=$(( end_time - start_time ))
+    					echo "temps d'exucation : ${duration2}.0 sec"
+        			;;
+        			'indiv')
+        				grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				./draft1 < "$inputFile"
+        			;;
+        			'all')
+        				grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				./draft1 < "$inputFile"
+        			;;
+        			*)
+        				echo 'erreur'
+        			;;
+        		esac
+    		;;
+    		*)
+        		echo 'test'
+    		;;
+	esac
 fi
 
-#recuperation de la somme du fichier c
-#creation du fichier avec les valeurs 
-#par ordre croissant
+
+
+#ici, on nomme les fichiers et on effectue le traitement supplémentzire pour les station lv all
+if [ -n "$4" ]; then
+	if [ "$2" = "lv" ] && [ "$3" = "all" ]; then
+		#on trie d'abord le fichier par ordre croissant de la consommation
+		sort -t ':' -k 3,3n "$outputFile" > "$2_$3_$4.txt"
+		#puis on extrait les 10 plus petites consommations dans un fichier temporaire
+        	head -n 5 "$2_$3_$4.txt" > "$tempFile"
+        	#puis on extrait les 10 plus grandes consommations dans un fichiers temporaire
+        	tail -n 5 "$2_$3_$4.txt" >> "$tempFile"
+        	#on lit ligne par ligne les colonnes de la conso et de la capacité pour en faire la différence qu'on ajoute dans une nouvelle colonne
+        	while IFS= read -r ligne; do
+    			capa=$(echo "$ligne" | cut -d':' -f2)
+    			conso=$(echo "$ligne" | cut -d':' -f3)
+    			qaec=$((conso - capa))
+    			echo "$ligne:$qaec" >> "$minmaxFile"
+		done < "$tempFile"
+		cp "$minmaxFile" "$tempFile"
+		#puis on trie par ordre décroissant de la quantité absolue d'énergie consommée, puis on retire la colonne
+		sort -t ':' -k 4,4nr "$tempFile" | cut -f 1,2,3 -d ':' > "$minmaxFile"
+		#on rajoute en premiere ligne les informations 
+		texte="Station LV : Capacité : Consommation (tous)"
+        	sed -i "1i$texte" "$minmaxFile"
+        else
+        	#on trie par ordre croissant 
+		sort -t ':' -k 2,2n "$outputFile" > "$2_$3_$4.txt"
+		case $2 in
+			'hvb')
+				texte="Station HVB : Capacité : Consommation (entreprises)"
+        			sed -i "1i$texte" "$2_$3_$4.txt"
+        		;;
+        		'hva')
+        			texte="Station HVA : Capacité : Consommation (entreprises)"
+        			sed -i "1i$texte" "$2_$3_$4.txt"
+        		;;
+        		'lv')
+        			case $3 in
+        				'comp')
+        				texte="Station LV : Capacité : Consommation (entreprises)"
+        				sed -i "1i$texte" "$2_$3_$4.txt"
+        				;;
+        				'indiv')
+        					texte="Station LV : Capacité : Consommation (particuliers)"
+        					sed -i "1i$texte" "$2_$3_$4.txt"
+        				;;
+        				*)
+        					echo 'erreur'
+        				;;
+        			esac
+        		;;
+        		*)
+        			echo 'erreur'
+        		;;
+		esac
+        fi
+else
+#on fait la meme chose dans le  cas ou il n'y a pas d'identifiant de centrale
+	if [ "$2" = "lv" ] && [ "$3" = "all" ]; then
+		sort -t ':' -k 3,3n "$outputFile" > "$2_$3.txt"
+        	head -n 5 "$2_$3.txt" > "$tempFile"
+        	tail -n 5 "$2_$3.txt" >> "$tempFile"
+        	while IFS= read -r ligne; do
+    			capa=$(echo "$ligne" | cut -d':' -f2)
+    			conso=$(echo "$ligne" | cut -d':' -f3)
+    			qaec=$((conso - capa))
+    			echo "$ligne:$qaec" >> "$minmaxFile"
+		done < "$tempFile"
+		cp "$minmaxFile" "$tempFile"
+		sort -t ':' -k 4,4nr "$tempFile" | cut -f 1,2,3 -d ':' > "$minmaxFile"
+        	texte="Station LV : Capacité : Consommation (tous)"
+        	sed -i "1i$texte" "$minmaxFile"
+        else
+		sort -t ':' -k 2,2n "$outputFile" > "$2_$3.txt"
+		case $2 in
+		'hvb')
+			texte="Station HVB : Capacité : Consommation (entreprises)"
+        		sed -i "1i$texte" "$2_$3.txt"
+        	;;
+        	'hva')
+        		texte="Station HVA : Capacité : Consommation (entreprises)"
+        		sed -i "1i$texte" "$2_$3.txt"
+        	;;
+        	'lv')
+        		case $3 in
+        			'comp')
+        				texte="Station LV : Capacité : Consommation (entreprises)"
+        				sed -i "1i$texte" "$2_$3.txt"
+        			;;
+        		'	indiv')
+        				texte="Station LV : Capacité : Consommation (particuliers)"
+        				sed -i "1i$texte" "$2_$3.txt"
+        			;;
+        			*)
+        				echo 'erreur'
+        			;;
+        		esac
+        	;;
+        	*)
+        		echo 'erreur'
+        	;;
+	esac
+	fi
+fi
