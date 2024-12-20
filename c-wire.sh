@@ -104,6 +104,12 @@ if (( res1 != 0 )); then
 else
     echo 'OK'
 fi
+
+cd codeC
+
+make 
+
+#gcc -o draft1 draft1.c
 #verifie l'existance du fichier c sinon elle le compile
 if [ ! -f draft1 ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
@@ -125,6 +131,9 @@ if [ -n "$4" ]; then
         'hvb')
             grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | grep -E "$4;" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
             ./draft1 < "$inputFile"
+            if [ $? != 0 ]; then
+            	echo "execution echouee"
+            fi
         ;;
         'hva')
             grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
@@ -167,12 +176,15 @@ else
     		'lv')
         		case $3 in
         			'comp')
-        				grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				grep -E "^.;[^;]*;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         				end_time=$(date +%s)
     					duration=$(( end_time - start_time ))
     					echo "temps d'exucation : ${duration}.0 sec"
         				start_time2=$(date +%s)
+        				
         				./draft1 < "$inputFile"
+        				#cat "$inputFile" | ./draft1
+        				
         				end_time2=$(date +%s)
     					duration2=$(( end_time - start_time ))
     					echo "temps d'exucation : ${duration2}.0 sec"
@@ -256,8 +268,8 @@ else
 #on fait la meme chose dans le  cas ou il n'y a pas d'identifiant de centrale
 	if [ "$2" = "lv" ] && [ "$3" = "all" ]; then
 		sort -t ':' -k 3,3n "$outputFile" > "$2_$3.txt"
-        	head -n 5 "$2_$3.txt" > "$tempFile"
-        	tail -n 5 "$2_$3.txt" >> "$tempFile"
+        	head -n 10 "$2_$3.txt" > "$tempFile"
+        	tail -n 10 "$2_$3.txt" >> "$tempFile"
         	while IFS= read -r ligne; do
     			capa=$(echo "$ligne" | cut -d':' -f2)
     			conso=$(echo "$ligne" | cut -d':' -f3)
