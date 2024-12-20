@@ -106,9 +106,7 @@ else
 fi
 
 cd codeC
-
-make 
-
+make
 #gcc -o draft1 draft1.c
 #verifie l'existance du fichier c sinon elle le compile
 if [ ! -f draft1 ]; then 
@@ -130,28 +128,38 @@ if [ -n "$4" ]; then
 #dans le cas des stations hvb et hva, le consommateur ne peut être que une entrerpise
         'hvb')
             grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | grep -E "$4;" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
-            ./draft1 < "$inputFile"
+            	end_time=$(date +%s)
+    		duration=$(( end_time - start_time ))
+    		echo "temps d'exucation : ${duration}.0 sec"
             if [ $? != 0 ]; then
             	echo "execution echouee"
             fi
         ;;
         'hva')
             grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
-            ./draft1 < "$inputFile"
+            end_time=$(date +%s)
+    	duration=$(( end_time - start_time ))
+    	echo "temps d'exucation : ${duration}.0 sec"
         ;;
         'lv')
         case $3 in
         	'comp')
-        		grep -E "^.;.;.;[0-9]+;[^;]*;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        		./draft1 < "$inputFile"
+        		grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;[^;]*;-;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		end_time=$(date +%s)
+    			duration=$(( end_time - start_time ))
+    			echo "temps d'exucation : ${duration}.0 sec"
         	;;
         	'indiv')
-        		grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        		./draft1 < "$inputFile"
-        	;;
+        		grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;-;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		end_time=$(date +%s)
+    			duration=$(( end_time - start_time ))
+    			echo "temps d'exucation : ${duration}.0 sec"
+    		;;
         	'all')
-        		grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        		./draft1 < "$inputFile"
+        		grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;[^;]*;[^;]*;" "$1" | grep -E "$4;" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        		end_time=$(date +%s)
+    			duration=$(( end_time - start_time ))
+    			echo "temps d'exucation : ${duration}.0 sec"
         	;;
         	*)
         		echo 'erreur'
@@ -167,35 +175,37 @@ else
 	case $2 in
     		'hvb')
         		grep -E "^[0-9]+;[0-9]+;-;-;" "$1" | cut -f 2,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        		./draft1 < "$inputFile"
+        		end_time=$(date +%s)
+        		duration=$(( end_time - start_time ))
+        		echo "temps d'exucation : ${duration}.0 sec"
     		;;
-    		'hva')
+    		'hva')cd codeC
+
+make 
         		grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        		./draft1 < "$inputFile"
+        		end_time=$(date +%s)
+        		duration=$(( end_time - start_time ))
+        		echo "temps d'exucation : ${duration}.0 sec"
     		;;
     		'lv')
         		case $3 in
         			'comp')
-        				grep -E "^.;[^;]*;.;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         				end_time=$(date +%s)
     					duration=$(( end_time - start_time ))
     					echo "temps d'exucation : ${duration}.0 sec"
-        				start_time2=$(date +%s)
-        				
-        				./draft1 < "$inputFile"
-        				#cat "$inputFile" | ./draft1
-        				
-        				end_time2=$(date +%s)
-    					duration2=$(( end_time - start_time ))
-    					echo "temps d'exucation : ${duration2}.0 sec"
         			;;
         			'indiv')
-        				grep -E "^.;.;.;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        				./draft1 < "$inputFile"
+        				grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				end_time=$(date +%s)
+        				duration=$(( end_time - start_time ))
+        				echo "temps d'exucation : ${duration}.0 sec"
         			;;
         			'all')
-        				grep -E "^.;.;.;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
-        				./draft1 < "$inputFile"
+        				grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;[^;]*;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+        				end_time=$(date +%s)
+        				duration=$(( end_time - start_time ))
+        				echo "temps d'exucation : ${duration}.0 sec"
         			;;
         			*)
         				echo 'erreur'
@@ -208,7 +218,11 @@ else
 	esac
 fi
 
-
+start_time2=$(date +%s)
+        		./draft1 < "$inputFile"
+        		end_time2=$(date +%s)
+    			duration2=$(( end_time - start_time ))
+    			echo "temps d'exucation : ${duration2}.0 sec"
 
 #ici, on nomme les fichiers et on effectue le traitement supplémentzire pour les station lv all
 if [ -n "$4" ]; then
