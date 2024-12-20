@@ -119,8 +119,8 @@ Arbre* doublerotationgauche(Arbre* a){
 
 
 Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
-    if(a->equilibre <= 2){
-        if((a->droit->equilibre) <= 0){
+    if(a->equilibre >= 2){
+        if((a->droit->equilibre) >= 0){
             return rotationgauche(a);
         }
         else{
