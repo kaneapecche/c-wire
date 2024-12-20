@@ -109,9 +109,8 @@ cd codeC
 make
 #gcc -o draft1 draft1.c
 #verifie l'existance du fichier c sinon elle le compile
-if [ ! -f draft1 ]; then 
+if [ ! -f programme ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
-    gcc -o draft1 draft1.c
     if [ $? -ne 0 ]; then 
         echo 'erreur : echec de la compilation'
         exit 1
@@ -311,7 +310,7 @@ else
         				texte="Station LV : Capacité : Consommation (entreprises)"
         				sed -i "1i$texte" "$2_$3.txt"
         			;;
-        		'	indiv')
+        			'indiv')
         				texte="Station LV : Capacité : Consommation (particuliers)"
         				sed -i "1i$texte" "$2_$3.txt"
         			;;
