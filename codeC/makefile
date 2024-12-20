@@ -5,7 +5,7 @@ SRC = main.c AVL.c
 OBJ = $(SRC:.c=.o)
 
 $(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c AVL.h
 	$(CC) $(CFLAGS) -c $< -o $@
