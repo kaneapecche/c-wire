@@ -1,5 +1,5 @@
-CC = gcc
-CFLAGS = -Wall -g -std=c99
+	CC = gcc
+	CFLAGS = -Wall -g -std=c99
 TARGET = programme
 SRC = main.c AVL.c
 OBJ = $(SRC:.c=.o)
