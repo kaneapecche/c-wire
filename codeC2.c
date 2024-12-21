@@ -114,8 +114,8 @@ Arbre* doublerotationgauche(Arbre* a){
     return rotationgauche(a);
 }
 Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
-    if(a->equilibre <= 2){
-        if((a->droit->equilibre) <= 0){
+    if(a->equilibre >= 2){
+        if((a->droit->equilibre) >= 0){
             return rotationgauche(a);
         }
         else{
@@ -158,6 +158,7 @@ Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int c
     }
     if(*h!=0){
         a->equilibre=a->equilibre + *h;
+        a=equilibrage(a)
         if(a->equilibre==0){
             *h=0;
         }
