@@ -1,15 +1,13 @@
-	CC = gcc
-	CFLAGS = -Wall -g -std=c99
-TARGET = programme
-SRC = main.c AVL.c
-OBJ = $(SRC:.c=.o)
+all: test
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+AVL.o: AVL.c AVL.h
+	gcc -c AVL.c -o AVL.o
 
-%.o: %.c AVL.h
-	$(CC) $(CFLAGS) -c $< -o $@
+#verification.o: verification.c verification.h AVL2.h
+	#gcc -c verification.c -o verification.o
 
-clean:
-	rm -f $(OBJ) $(TARGET)
-	
+main.o: main.c AVL.h 
+	gcc -c main.c -o main.o
+
+test: AVL.o main.o
+	gcc AVL.o main.o -o test
