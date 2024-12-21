@@ -11,6 +11,7 @@ typedef struct arbre{
     long int capacite_total;
     long int conso_total;
 }Arbre;
+
 //Fonctions pour la partie de l'arbre binaire equilibrer 
 Arbre* creation(int s){ //creation d'un nouveau noeud dans l'arbre 
     Arbre* noeud=malloc(sizeof(Arbre));
