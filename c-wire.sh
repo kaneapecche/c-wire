@@ -1,4 +1,4 @@
-#!/bin/bash
+			#!/bin/bash
 
 #initialisations des fichiers
 minmaxFile='./lv_all_minmax.txt'
@@ -106,16 +106,16 @@ else
 fi
 
 #cd codeC
-#make
-gcc -o programme codeC.c
+make -C ./codeC
+#gcc -o programme codeC.c
 #verifie l'existance du fichier c sinon elle le compile
-if [ ! -f programme ]; then 
-    echo "l'executable programme.c est introuvable. compilation ..."
+#if [ ! -f test ]; then 
+   # echo "l'executable programme.c est introuvable. compilation ..."
     if [ $? -ne 0 ]; then 
         echo 'erreur : echec de la compilation'
         exit 1
     fi
-fi
+#fi
 
 #on débute le chronometre pour avoir le temps d'exécution
 start_time=$(date +%s)
@@ -219,7 +219,7 @@ else
 fi
 
 start_time2=$(date +%s)
-        		./programme < "$inputFile"
+        		./codeC/test < "$inputFile"
         		end_time2=$(date +%s)
     			duration2=$(( end_time - start_time ))
     			echo "temps d'exucation : ${duration2}.0 sec"
