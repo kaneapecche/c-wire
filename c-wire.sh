@@ -105,9 +105,9 @@ else
     echo 'OK'
 fi
 
-cd codeC
-make
-#gcc -o draft1 draft1.c
+#cd codeC
+#make
+gcc -o programme codeC.c
 #verifie l'existance du fichier c sinon elle le compile
 if [ ! -f programme ]; then 
     echo "l'executable programme.c est introuvable. compilation ..."
@@ -178,10 +178,11 @@ else
         		duration=$(( end_time - start_time ))
         		echo "temps d'exucation : ${duration}.0 sec"
     		;;
-    		'hva')cd codeC
+    		'hva')
+    		#cd codeC
 
-make 
-        		grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
+#make 
+        		grep -E "^[0-9]+;[^;]*;[0-9]+;-;" "$1" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         		end_time=$(date +%s)
         		duration=$(( end_time - start_time ))
         		echo "temps d'exucation : ${duration}.0 sec"
@@ -218,7 +219,7 @@ make
 fi
 
 start_time2=$(date +%s)
-        		./draft1 < "$inputFile"
+        		./programme < "$inputFile"
         		end_time2=$(date +%s)
     			duration2=$(( end_time - start_time ))
     			echo "temps d'exucation : ${duration2}.0 sec"
