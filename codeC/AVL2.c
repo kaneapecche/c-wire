@@ -14,6 +14,7 @@ Arbre* creation(int s) {
     noeud->equilibre = 0;
     noeud->capacite_total = 0;
     noeud->conso_total = 0;
+    free(noeud);
     return noeud;
 }
 
