@@ -135,7 +135,7 @@ if [ -n "$4" ]; then
             fi
         ;;
         'hva')
-            grep -E "^[0-9]+;.;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
+            grep -E "^[0-9]+;[^;]*;[0-9]+;-;" "$1" | grep -E "$4;" | cut -f 3,7,8 -d ';' | tr '-' '0' | tr ';' ':' > "$inputFile"
             end_time=$(date +%s)
     	duration=$(( end_time - start_time ))
     	echo "temps d'exucation : ${duration}.0 sec"
@@ -193,7 +193,7 @@ else
         				grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;[^;]*;-;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
         				end_time=$(date +%s)
     					duration=$(( end_time - start_time ))
-    					echo "temps d'exucation : ${duration}.0 sec"
+    					echo "temps d'exucation : ${duration}.0 sec" 
         			;;
         			'indiv')
         				grep -E "^[^;]*;[^;]*;[^;]*;[0-9]+;-;[^;]*;" "$1" | cut -f 4,7,8 -d ';' | tr '-' '0' | tr ';' ':'  > "$inputFile"
