@@ -9,13 +9,13 @@ Il faudra rajouter le fichier c-wire_v25.dat dans vos fichiers car il est trop v
 
 Au niveau des commandes, vous allez entrée dans votre terminal :
 - Compilez le projet en utilisant : make -C ./codeC
-- puis pour tester que tous fonctionne vous faite:
+- Puis pour tester que tout fonctionne vous faites:
       ./c-wire.sh
   puis ./c-wire.sh c-wire_v25.dat hvb comp
   puis ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp
   puis open lv_indiv.txt
 
-hvb comp est un exemple de ce que peut choisir l'utilisateur, il peut choisir :
+hvb comp est un exemple de ce que peut choisir l'utilisateur, en tout, il peut choisir :
 
 - hvb comp
 - hva comp
@@ -24,10 +24,9 @@ hvb comp est un exemple de ce que peut choisir l'utilisateur, il peut choisir :
 - lv all
 - lv all minmax
 
-il faudra donc choisir lequel on exécute avec ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp
-puis ouvrir avec open lv_indiv.txt pour que cela fonctionne il faudra bien faire attention à mettre le tiret seulement pour l'ouverture
+Il faudra donc choisir lequel on exécute avec ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp
+puis ouvrir avec open lv_indiv.txt pour que cela fonctionne il faudra bien faire attention à mettre le tiret seulement pour l'ouverture.
 
-attention ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp pour cette commande /home/assia/ cela doit être remplacé par votre chemin celui-ci est présent lorsque vous
-allez avoir votre fichier c-wire_v25.dat il faudra que vous fassiez un clic-droit et allez sur propriété et ça affichera votre chemin.
+Attention ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp pour cette commande /home/assia/ cela doit être remplacé par votre chemin, celui-ci est présent lorsque vous allez avoir votre fichier c-wire_v25.dat il faudra que vous fassiez un clic-droit et allez sur propriété et ça affichera votre chemin.
 
-vous pourrez également effacer les fichiers générer grâce au clean
+Vous pourrez également effacer les fichiers générer grâce au clean.
