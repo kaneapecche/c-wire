@@ -15,7 +15,6 @@ Arbre* creation(int s){ //creation d'un nouveau noeud dans l'arbre
     noeud->equilibre=0;
     noeud->capacite_total=0;
     noeud->conso_total=0;
-    free(noeud);
     return noeud;
 }
 int estVide(Arbre* racine){ //verifie si l'arbre a des fils ou est vide 
