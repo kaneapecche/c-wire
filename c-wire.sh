@@ -1,4 +1,4 @@
-			#!/bin/bash
+#!/bin/bash
 
 #initialisations des fichiers
 minmaxFile='./lv_all_minmax.txt'
