@@ -29,3 +29,5 @@ puis ouvrir avec open lv_indiv.txt pour que cela fonctionne il faudra bien faire
 
 attention ./c-wire.sh /home/assia/c-wire_v25.dat hvb comp pour cette commande /home/assia/ cela doit être remplacé par votre chemin celui-ci est présent lorsque vous
 allez avoir votre fichier c-wire_v25.dat il faudra que vous fassiez un clic-droit et allez sur propriété et ça affichera votre chemin.
+
+vous pourrez également effacer les fichiers générer grâce au clean
