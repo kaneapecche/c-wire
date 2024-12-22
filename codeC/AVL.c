@@ -15,6 +15,7 @@ Arbre* creation(int s){ //creation d'un nouveau noeud dans l'arbre
     noeud->equilibre=0;
     noeud->capacite_total=0;
     noeud->conso_total=0;
+    free(noeud);
     return noeud;
 }
 int estVide(Arbre* racine){ //verifie si l'arbre a des fils ou est vide 
@@ -123,15 +124,15 @@ Arbre* equilibrage(Arbre *a){    //reequilibre en cas de desequillibrage
     }
     return a; 
 }
-Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int conso){
+Arbre* insertionAVL (Arbre* a, int id_station ,int *h, long int capa, long int conso){ //insert un nouveau noeud et fait la somme
     if (a==NULL){
         *h=1;
-        a  =  creation(id_station);
-        a->capacite_total+=capa;
-        a->conso_total+=conso;
+        a  =  creation(id_station); //si l'arbre n'existe pas on cree un nouveau noeud
+        a->capacite_total+=capa; //somme de la capacité si l'arbre
+        a->conso_total+=conso; //somme de la consommation 
         return a;
     }
-    else if(id_station == a->id_station){
+    else if(id_station == a->id_station){ //si c'est l'identifiant de la station qu'on cherche on fait aussi la somme
         a->capacite_total+=capa;
         a->conso_total+=conso;
         return a;
@@ -167,7 +168,7 @@ void verificationalloc() { // alloue la place et verifie si l'allocation ait reu
     }
     free(pnew);
 }
-void parcoursprefixe(Arbre* a, FILE* fichier){
+void parcoursprefixe(Arbre* a, FILE* fichier){ //fait un parcours prefixe sur le AVL
     if(a!=NULL){
     fprintf(fichier, "%d:%ld:%ld\n", a->id_station, a->capacite_total, a->conso_total);
     parcoursprefixe(a->gauche, fichier);
