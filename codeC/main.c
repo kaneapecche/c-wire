@@ -5,7 +5,7 @@
 
 int main(){
     Arbre* racine = NULL;
-    FILE* sortie = fopen("sortie.txt","w");
+    FILE* sortie = fopen("sortie.txt","w"); //ouverture du fichier de sortie trier par le shell
     if(sortie==NULL){
         exit(1);
     }
@@ -13,10 +13,9 @@ int main(){
     long int capa, conso;
     int h=-1;
     while(scanf("%d:%ld:%ld\n", &id, &capa, &conso)==3){
-        racine=insertionAVL(racine, id, &h, capa, conso);
+        racine=insertionAVL(racine, id, &h, capa, conso); //fonction qui insert et calcule la somme
         //la somme est calculée dans la fonction insertionAVL
-        //voir s'il est possible de fzaire la somme directment dans la fonction insertion
     }
-    parcoursprefixe(racine, sortie);
+    parcoursprefixe(racine, sortie); //appel de la fonction qui fait un parcours prefixe
     return 0;
 }
