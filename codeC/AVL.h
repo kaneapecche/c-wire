@@ -45,4 +45,6 @@ void verificationalloc();
 
 void parcoursprefixe(Arbre* a, FILE* fichier);
 
+void freeAVL(Arbre *racine);
+
 #endif
