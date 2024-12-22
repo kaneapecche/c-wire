@@ -17,5 +17,7 @@ int main(){
         //la somme est calculée dans la fonction insertionAVL
     }
     parcoursprefixe(racine, sortie); //appel de la fonction qui fait un parcours prefixe
+    freeAVL(racine);
+    
     return 0;
 }
