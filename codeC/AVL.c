@@ -174,3 +174,12 @@ void parcoursprefixe(Arbre* a, FILE* fichier){ //fait un parcours prefixe sur le
     parcoursprefixe(a->droit, fichier);
     }
 }
+// Fonction pour libérer récursivement l'arbre  
+void freeAVL(Arbre *racine) { 
+ 	if (racine != NULL) { 
+	 freeAVL(racine->gauche); // Libère le sous-arbre gauche 
+	 freeAVL(racine->droit); // Libère le sous-arbre droit 
+	 free(racine); // Libère le nœud courant 
+	 } 
+}
+
